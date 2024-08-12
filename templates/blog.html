@@ -8,8 +8,8 @@
   <body>
     <h2>Maqolalar</h2>
     
-    {% for article in articles %}
-    <a href="/blog/birinchi-maqolam">{{ article }}</a><br />
+    {% for slug, article in articles.items() %}
+    <a href="/blog/{{slug}}">{{ article }}</a><br />
     {% endfor %}
 
   </body>
