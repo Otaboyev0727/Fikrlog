@@ -7,12 +7,14 @@ class Article():
         
     @property
     def slug(self):
-        return slugify(slug.title)
-    def load_content():
+        return slugify(self.title)
+    
+    def load_content(self):
         with open(f"articles/{self.title}") as file:
             self.content = file.read()
+            
     @classmethod
-    def all():
+    def all(cls):
         titles = os.listdir("articles")
         slug_articles = {}
         for title in titles:
