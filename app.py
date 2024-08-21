@@ -4,7 +4,23 @@ from slugify import slugify
 from articles import Article
 
 app = Flask(__name__)
+
+app.secret_key = "thisisverysecret"
+
+# Authentication
+# Cookie
+
 articles = Article.all()
+
+@app.route("/set-session")
+def set_session():
+    session ["user_id"] = 1
+    return "session set"
+
+@app.route("/get-session")
+def get_session():
+    return f"user_id = {session['user_id']}"
+
 
 @app.route("/first-time")
 def first_time():
