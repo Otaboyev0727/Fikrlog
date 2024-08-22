@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, session, make_response
 import os
 from slugify import slugify
 from articles import Article
+import hashlib
 
 app = Flask(__name__)
 
@@ -12,34 +13,44 @@ app.secret_key = "thisisverysecret"
 
 articles = Article.all()
 
-@app.route("/set-session")
-def set_session():
-    session ["user_id"] = 1
-    return "session set"
-
-@app.route("/get-session")
-def get_session():
-    return f"user_id = {session['user_id']}"
-
-
-@app.route("/first-time")
-def first_time():
-    if 'seen' not in request.cookies:
-        response = make_response('You are new here!')
-        response.set_cookie('seen', "1")
-        return response
-
-    seen = int(request.cookies['seen'])  
-
-    response = make_response(f'I have seen you before {seen} times')
-    response.set_cookie('seen', str(seen + 1))
-    return response
+users={
+    "admin": "185f8db32271fe25f561a6fc938b2e264306ec304eda518007d1764826381969"
+}
 
 @app.route("/")
 def blog():
     return render_template("blog.html", articles=articles)
 
-@app.route("/blog/<slug>")
+
+
+@app.get("/admin")
+def admin_page():
+    if "user" in session:
+        return "you are already authenticated"
+    
+    return render_template("login.html")
+@app.get("/logout")
+def logout():
+    del session["user"]
+    return "logged out"
+
+@app.post("/admin")
+def admin_login():
+    username = request.form["username"]
+    password = request.form["password"]
+    if username not in users:
+        return render_template("login.html", error="username/password incorrect")
+    hashed = hashlib.sha256(password.encode()).hexdigest()
+    
+    if users[username] != hashed:
+        return render_template("login.html", error="username/password incorrect")
+    
+    session["user"] = username
+    return "you are now authenticated"    
+    
+    
+
+@app.route("/blog/<zslug>")
 def article(slug: str):
     article = articles[slug]
    
