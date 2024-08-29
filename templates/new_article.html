@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create New Article</title>
+    <!-- CKEditor scriptini qo'shish -->
+    <script src="https://cdn.ckeditor.com/4.17.1/standard/ckeditor.js"></script>
+</head>
+<body>
+    <h1>Yangi Maqola Yaratish</h1>
+    <form action="/new-article" method="POST">
+        <div>
+            <label for="title">Sarlavha:</label>
+            <input type="text" id="title" name="title" required>
+        </div>
+        <div>
+            <label for="content">Maqola matni:</label>
+            <textarea id="content" name="content"></textarea>
+        </div>
+        <div>
+            <input type="submit" value="Saqlash">
+        </div>
+    </form>
+
+    <!-- CKEditor ni o'rnatish -->
+    <script>
+        CKEDITOR.replace('content');
+    </script>
+</body>
+</html>

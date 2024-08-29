@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, session, make_response
+from flask import Flask, render_template, request, session, redirect, url_for
 import os
 from slugify import slugify
 from articles import Article
@@ -47,10 +47,27 @@ def admin_login():
     
     session["user"] = username
     return "you are now authenticated"    
+@app.route("/new-article", methods=["GET", "POST"])
+def new_article():
+    if request.method == "POST":
+        title = request.form["title"]
+        content = request.form["content"]
+        
+        # Maqolani saqlash
+        slug = slugify(title)
+        with open(f"articles/{title}.md", "w") as file:
+            file.write(content)
+        
+        # Maqolalar ro'yxatini yangilash
+        global articles
+        articles[slug] = f"{title}.md"
+        
+        return redirect(url_for("blog"))
     
+    return render_template("new_article.html")    
     
 
-@app.route("/blog/<zslug>")
+@app.route("/blog/<slug>")
 def article(slug: str):
     article = articles[slug]
    
